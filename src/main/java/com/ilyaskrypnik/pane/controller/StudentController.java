@@ -21,8 +21,8 @@ public class StudentController {
         studentService.delete(id);
     }
 
-    public void updateStudent(Student student) {
-        studentService.update(student);
+    public Student updateStudent(Student student) {
+        return studentService.update(student);
     }
 
     public Student getStudent(long id) {

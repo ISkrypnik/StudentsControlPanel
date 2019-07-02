@@ -73,19 +73,13 @@ public class Window {
         gridData.horizontalSpan = 2;
 
         final Button saveButton = new Button(shell, SWT.PUSH);
-        saveButton.setBounds(40, 100, 70, 50);
-        saveButton.setText("Save");
-        saveButton.setLayoutData(gridData);
+        configureButton(saveButton, "Save", gridData, 40, 100);
 
         final Button deleteButton = new Button(shell, SWT.PUSH);
-        deleteButton.setBounds(110, 100, 70, 50);
-        deleteButton.setText("Delete");
-        deleteButton.setLayoutData(gridData);
+        configureButton(deleteButton, "Delete", gridData, 110, 100);
 
         final Button updateButton = new Button(shell, SWT.PUSH);
-        updateButton.setBounds(110, 100, 70, 50);
-        updateButton.setText("Edit");
-        updateButton.setLayoutData(gridData);
+        configureButton(updateButton, "Edit", gridData, 180, 100);
 
         saveButton.addSelectionListener(new SelectionListener() {
 
@@ -102,22 +96,25 @@ public class Window {
                         long studentId = Long.parseLong(item.getText(0));
                         student.setId(studentId);
 
-                        studentController.updateStudent(student);
-
-                        item.setText(1, firstName.getText());
-                        item.setText(2, lastName.getText());
-                        item.setText(3, groupNumber.getText());
+                        if (studentController.updateStudent(student) != null) {
+                            item.setText(1, firstName.getText());
+                            item.setText(2, lastName.getText());
+                            item.setText(3, groupNumber.getText());
+                        }
                         clearInputForm(firstName, lastName, groupNumber);
                     } else {
-                        addTableItem(table, studentController.createNewStudent(student));
-                        clearInputForm(firstName, lastName, groupNumber);
+                        Student newOne = studentController.createNewStudent(student);
+                        if (newOne != null) {
+                            addTableItem(table, newOne);
+                            clearInputForm(firstName, lastName, groupNumber);
+                        }
                     }
                 }
             }
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
-
+                //
             }
         });
 
@@ -136,7 +133,7 @@ public class Window {
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
-
+                //
             }
         });
 
@@ -154,9 +151,15 @@ public class Window {
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
-
+                //
             }
         });
+    }
+
+    private void configureButton(Button button, String buttonText, GridData gridData, int posx, int posy) {
+        button.setBounds(posx, posy, 70, 50);
+        button.setText(buttonText);
+        button.setLayoutData(gridData);
     }
 
     private void clearInputForm(Text firstName, Text lastName, Text groupNumber) {
